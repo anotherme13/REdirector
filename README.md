@@ -1,8 +1,8 @@
-# 🔀 App Redirector - Magisk Module
+# App Redirector - Magisk Module
 
 > ⚠️ **DISCLAIMER: FOR EDUCATIONAL PURPOSES ONLY**
 >
-> This project is created **strictly for educational and research purposes**. It demonstrates Android internals, Magisk module development, and system-level app management techniques.
+> This project is created **strictly for educational and research purposes**. It demonstrates Android internals, Magisk module development, and system-level app management techniques. Therefore, aware the importance of detecting rooted device or abnormal environment when developing some sensitive apps.
 >
 > **I am NOT responsible for any misuse of this software.** By using this module, you agree that:
 > - You will only use it for learning and legitimate testing on your own devices
@@ -14,32 +14,18 @@
 ---
 
 ## 🛡️ Security Research Justification
-
-### Why This Module Matters for Security
-
-This module demonstrates a critical security concept: **Overlay/Clickjacking Attack Detection**.
-
-#### What is Overlay Clickjacking?
-Malicious apps can draw invisible overlays on top of legitimate apps, tricking users into clicking buttons they didn't intend to. This is known as:
-- **Tapjacking** - Intercepting touch events
-- **Overlay attacks** - Drawing fake UI on top of real apps
-- **Clickjacking** - Redirecting user clicks to malicious actions
-
 #### How This Module Helps Security Research:
 
-1. **Detection Testing**: By redirecting app launches, security researchers can test whether their apps properly detect when another process is interfering with the foreground activity.
+1. **Detection Testing**: By redirecting app launches, security researchers can test whether their apps properly detect when another process is interfering with the foreground activity, or running in a abnormal environment?
 
 2. **Defense Validation**: Apps handling sensitive data (banking, authentication) should detect and prevent overlay attacks. This module helps validate those defenses.
 
 3. **Attack Surface Analysis**: Understanding how foreground activity can be monitored and manipulated helps developers build more secure apps.
 
-4. **Security Awareness**: Demonstrates to developers why they need to implement:
-   - `FLAG_SECURE` to prevent screenshots/overlays
-   - `filterTouchesWhenObscured` to block tapjacking
-   - Foreground activity verification
+
 
 #### Real-World Impact:
-- Banking apps must detect overlay attacks to prevent credential theft
+- **Banking apps must detect root detection**, overlay attack, ... -> refuse to run in an abnormal environment.
 - Payment apps need protection against clickjacking
 - Authentication flows require secure UI rendering
 
@@ -50,12 +36,12 @@ Malicious apps can draw invisible overlays on top of legitimate apps, tricking u
 ## 📚 What You'll Learn
 
 This module demonstrates:
-- 🔧 How Magisk modules work (service.sh, module.prop, late_start)
-- 📱 Android Activity lifecycle and foreground detection
-- 🐚 Shell scripting on Android (dumpsys, pm, am commands)
-- 🔄 App interception and redirection techniques
-- 📊 Logging mechanisms (logcat integration)
-- 🛡️ Security implications of foreground monitoring
+- How Magisk modules work (service.sh, module.prop, late_start)
+- Android Activity lifecycle and foreground detection
+- Shell scripting on Android (dumpsys, pm, am commands)
+- App interception and redirection techniques
+- Logging mechanisms (logcat integration)
+- Security implications of foreground monitoring
 
 ## 🎯 What it does
 
@@ -93,10 +79,6 @@ adb shell su -c "echo 'com.example.app=com.example.target' >> /data/adb/app_redi
 adb logcat -s MagiskAppWatcher
 ```
 
-### Find package names:
-```bash
-adb shell pm list packages | grep <keyword>
-```
 
 ## 📂 Files
 
@@ -111,10 +93,8 @@ adb shell pm list packages | grep <keyword>
 
 Simply remove from Magisk Manager. All redirects stop immediately.
 
-## 👨‍💻 Author
-
+## Author
 **🔥 _Hi1uTr3n_**  
-GitHub: [github.com/anotherme13](https://github.com/anotherme13)
 
 ---
 
@@ -129,7 +109,3 @@ Only use on devices you own and have permission to modify.
 ```
 
 ---
-
-**Remember: Knowledge is power, use it responsibly! ��**
-
-**For security researchers: Use this to TEST and IMPROVE app defenses, not to attack them.**
