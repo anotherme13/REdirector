@@ -1,0 +1,3 @@
+ui_print("Installing App Started Watcher module...");
+ui_print("This module monitors foreground app changes and logs them to logcat and module log.");
+run_program("/sbin/magisk", "install-module");

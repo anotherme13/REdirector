@@ -1,0 +1,94 @@
+#!/sbin/sh
+
+##########################################################################################
+#
+# Magisk Module Installer Script
+#
+##########################################################################################
+
+OUTFD=$2
+ZIPFILE=$3
+
+ui_print() {
+  echo -e "ui_print $1\nui_print" >> /proc/self/fd/$OUTFD
+}
+
+require_new_magisk() {
+  ui_print "*******************************"
+  ui_print " Please install Magisk v20.4+! "
+  ui_print "*******************************"
+  exit 1
+}
+
+# Detect Magisk
+is_mounted() {
+  grep -q " $(readlink -f $1) " /proc/mounts 2>/dev/null
+  return $?
+}
+
+TMPDIR=/dev/tmp
+PERSISTDIR=/sbin/.magisk/mirror/persist
+
+rm -rf $TMPDIR 2>/dev/null
+mkdir -p $TMPDIR
+
+# Check Magisk version
+[ -z $MAGISK_VER_CODE ] || require_new_magisk
+
+# Extract module files
+ui_print "- Extracting module files"
+unzip -o "$ZIPFILE" -d $TMPDIR >&2
+
+# Copy files to module directory
+MODPATH=/data/adb/modules/app.redirector
+rm -rf $MODPATH 2>/dev/null
+mkdir -p $MODPATH
+
+ui_print "- Installing App Redirector"
+cp -af $TMPDIR/* $MODPATH/
+rm -rf $MODPATH/META-INF
+
+# Set permissions
+ui_print "- Setting permissions"
+set_perm_recursive $MODPATH 0 0 0755 0644
+[ -f $MODPATH/service.sh ] && chmod 0755 $MODPATH/service.sh
+[ -f $MODPATH/uninstall.sh ] && chmod 0755 $MODPATH/uninstall.sh
+
+ui_print " "
+ui_print "╔═══════════════════════════════════════════════════╗"
+ui_print "║                                                   ║"
+ui_print "║        🔀  APP REDIRECTOR  🔀                    ║"
+ui_print "║                                                   ║"
+ui_print "║   🛡️ Security Research & Education Tool 🛡️       ║"
+ui_print "║                                                   ║"
+ui_print "╚═══════════════════════════════════════════════════╝"
+ui_print " "
+ui_print "✅ Installation complete!"
+ui_print "🚀 Module will start on next reboot"
+ui_print " "
+ui_print "┌───────────────────────────────────────────────────┐"
+ui_print "│  📝 SETUP INSTRUCTIONS:                          │"
+ui_print "├───────────────────────────────────────────────────┤"
+ui_print "│                                                   │"
+ui_print "│  1️⃣  Edit redirect list:                         │"
+ui_print "│     /data/adb/app_redirect_list.txt              │"
+ui_print "│                                                   │"
+ui_print "│  2️⃣  Format: source.pkg=target.pkg               │"
+ui_print "│                                                   │"
+ui_print "│  3️⃣  Changes apply immediately (no reboot)       │"
+ui_print "│                                                   │"
+ui_print "├───────────────────────────────────────────────────┤"
+ui_print "│  💡 Find package names:                          │"
+ui_print "│     adb shell pm list packages | grep <name>     │"
+ui_print "│                                                   │"
+ui_print "│  📊 View logs:                                   │"
+ui_print "│     adb logcat -s MagiskAppWatcher               │"
+ui_print "│                                                   │"
+ui_print "└───────────────────────────────────────────────────┘"
+ui_print " "
+ui_print "⚠️  FOR EDUCATIONAL PURPOSES ONLY"
+ui_print "🔥 Author: _Hi1uTr3n_"
+ui_print " "
+
+rm -rf $TMPDIR
+exit 0
