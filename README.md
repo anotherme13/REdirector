@@ -25,7 +25,7 @@
 
 
 #### Real-World Impact:
-- **Banking apps must detect root detection**, overlay attack, ... -> refuse to run in an abnormal environment.
+- **Banking apps must implement some root detections**, overlay attack, ... -> refuse to run in an abnormal environment.
 - Payment apps need protection against clickjacking
 - Authentication flows require secure UI rendering
 
